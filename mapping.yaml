@@ -1,0 +1,63 @@
+# This configuration file defines the mapping of local data into BBMRI-cohorts categories
+
+
+# Define the names of each field
+field_mappings:
+
+  # Donor/Clinical Information
+  PATIENT_ID: ID Patient
+  SEX: Sex
+  BIRTH_DATE: DOB
+  DONOR_AGE: Donor age
+  DIAGNOSIS: Biobanca_ICD code
+  DIAGNOSIS2: Biobanca_ICD code2
+  AGE_AT_PRIMARY_DIAGNOSIS: Age at Diagnosis 
+  DATE_DIAGNOSIS : Diagnosis date 
+
+  # Sample Information
+  SAMPLE_ID: ID Sample
+  SAMPLING_DATE: Sampling date
+  MATERIAL_TYPE: Sample Type
+  STORAGE_TEMPERATURE: Storage Temperature
+  
+  
+  
+# Define the names of each value
+value_mappings:
+  SEX:
+    MALE: M
+    FEMALE: F
+    UNDIFFERENTIAL: undifferentiated
+    UNKNOWN: unknown
+
+  MATERIAL_TYPE:
+    TISSUE_PARAFFIN_EMBEDDED: FFPE
+    TISSUE_FROZEN:
+      - SNAP FROZEN
+      - FROZEN
+      - OCT
+    BLOOD: BLOOD
+    FAECES: FECIS
+    BUFFY_COAT: BUFFY COAT
+    RNA: RNA
+    DNA:
+    - DNA
+    - GDNA
+    SALIVA: SALIVA
+    URINE: URINE
+    CELL_LINE: CELLS
+    OTHER: SN
+    SERUM: SERUM
+    PLASMA: PLASMA
+    LIQUOR: LIQUOR
+    WHOLE_BLOOD: WHOLE BLOOD
+    PATHOGEN:
+    THROAT_SWAB:
+    CDNA:
+    NASAL_SWAB:
+    TISSUE_STAINED:
+    PERIPHERAL_BLOOD_CELLS:
+    MICRO_RNA:
+
+
+
