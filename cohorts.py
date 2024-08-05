@@ -50,6 +50,16 @@ if args.example:
     cols.insert(0, cols.pop(cols.index('id')))
     cols.insert(1, cols.pop(cols.index('collection_id')))
     res = res.loc[:, cols]
+    res.columns = [
+    "id",
+    "collection",
+    "sex",
+    "age_range",
+    "sample_type",
+    "disease",
+    "number_of_samples",
+    "number_of_donors",
+    ]
     output_file = f"outputs/bbmri-cohorts-collection-EXAMPLE.xlsx"
     res.to_excel(output_file, index = False)
 
