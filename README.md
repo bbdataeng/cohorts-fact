@@ -2,7 +2,7 @@
 
 Python script for the creation of facts for the BBMRI COHORTS.
 
-![facts-creation](https://github.com/bbdataeng/cohorts-fact/blob/BBMRIcohortguide.png)
+![facts-creation](https://github.com/bbdataeng/cohorts-fact/blob/main/BBMRIcohortguide.png)
 
 ## Requirements
 ``` shell
@@ -15,17 +15,17 @@ You need to edit `config.yaml` and specify:
 
 - biobank ID
 
-- collecion ID
+- collection ID
 
-and also specify the names of your columns and values.
+- the names of columns and values in the input excel file
 
 ## Input
 
-- filename: xlsx file containing samples to be aggregated
+- `filename`: xlsx file containing samples to be aggregated
 
-- ex_facts [optional]: xlsx file containing existing facts in the Directory
+- `ex_facts` [optional]: xlsx file containing existing facts in the Directory
 
-- out_name [optional]: name of the output xlsx file. if None, default "facts.xlsx" is returned
+- `out_name [optional]`: name of the output xlsx file. if None, default "facts.xlsx" is returned
 
 ## Usage
 
