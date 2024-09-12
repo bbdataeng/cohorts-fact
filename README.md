@@ -2,6 +2,7 @@
 
 Python script for the creation of facts for the BBMRI COHORTS.
 
+![facts-creation](https://github.com/bbdataeng/cohorts-fact/blob/BBMRIcohortguide.png)
 
 ## Requirements
 ``` shell
