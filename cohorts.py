@@ -7,18 +7,20 @@ import yaml
 # Argument parser -------------------------------------------------------------
 
 parser = argparse.ArgumentParser(
-    prog="BBMRI-cohort-info",
-    description="The script takes in input an excel file from the local biobank system and aggregates data in FACTS",
+    prog="BBMRI-cohort-facts"
 )
+parser.add_argument('--facts', help = "name of the old facts table file") # need to add pre-existing facts and sum
 parser.add_argument('--filename', help = "name of the input file") 
-parser.add_argument('--biobank_id', help = "biobank ID from BBMRI-ERIC directory") 
-parser.add_argument('--collection_id', help = "collection id from BBMRI-ERIC directory") 
-parser.add_argument('--name', help = "name of the output file") 
-parser.add_argument('--example', help = "generates an example facts table", action='store_true') 
+# parser.add_argument('--biobank_id', help = "biobank ID from BBMRI-ERIC directory") 
+# parser.add_argument('--collection_id', help = "collection id from BBMRI-ERIC directory") 
+parser.add_argument('--out_name', help = "name of the output file", default="facts") 
+parser.add_argument('--example', help = "generates an example facts table", action = 'store_true') 
 args = parser.parse_args()
 
+
 filename = args.filename
-collection_id = f"bbmri-eric:ID:IT_{args.biobank_id}:collection:{args.collection_id}"
+out_name = args.out_name
+# collection_id = f"bbmri-eric:ID:IT_{args.biobank_id}:collection:{args.collection_id}"
 
 
 if args.example:
@@ -34,7 +36,7 @@ if args.example:
     df["disease"] = np.random.choice(disease, 3000)
     df["age_range"] = np.random.choice(age_ranges, 3000)
     df["sample_type"] = np.random.choice(material_type, 3000)
-    print(df)
+    # print(df)
 
     res = df.groupby(["sex", "disease", "age_range", "sample_type"], observed = True)[["patient_id", "sample_id"]].nunique().reset_index()
     res.rename(columns={"sample_id": "number_of_samples", "patient_id": "number_of_donors"})
@@ -61,17 +63,19 @@ if args.example:
     "number_of_donors",
     ]
     output_file = f"outputs/bbmri-cohorts-collection-EXAMPLE.xlsx"
-    res.to_excel(output_file, index = False)
+    res.to_excel(output_file, index = False, sheet_name="eu_bbmri_eric_IT_facts")
 
 else:
     # Import data -----------------------------------------------------------------
-
     data = pd.read_excel(filename)
 
     # Load configuration file
-    with open("mapping.yaml", 'r') as file:
+    with open("config.yaml", 'r') as file:
         config = yaml.safe_load(file)
 
+    biobank_id = config.get("biobank_id")
+    collection_id = config.get("collection_id")
+    # collection_id = f"bbmri-eric:ID:IT_{biobank_id}:collection:{collection_id}"
 
     # Mapping ---------------------------------------------------------------------
 
@@ -137,23 +141,23 @@ else:
     res = data.groupby(["SEX", "DIAGNOSIS", "AGE_RANGE", "MATERIAL_TYPE"], observed = True)[["PATIENT_ID", "SAMPLE_ID"]].nunique().reset_index()
 
     # create an unique ID for each row (fact) - given by args.name + int
-    ids = []
-    for i in range(len(res)):
-        unique_id = f"{args.name}{i+1}" # uuid.uuid4()
-        id = f"bbmri-eric:factID:IT:collection:{collection_id}:id:{unique_id}"
-        ids.append(id)
+    # ids = []
+    # for i in range(len(res)):
+    #     unique_id = f"{args.name}{i+1}" # uuid.uuid4()
+    #     id = f"bbmri-eric:factID:IT:collection:{collection_id}:id:{unique_id}"
+    #     ids.append(id)
 
     # add collection id to each line in each data set according to collections
     res["COLLECTION_ID"] = collection_id
 
     # add id to each line in each data set
-    res["ID"] = ids
+    # res["ID"] = ids
 
 
     # arrange and rename columns according to BBMRI guide
     res = res[
         [
-            "ID",
+            # "ID",
             "COLLECTION_ID",
             "SEX",
             "AGE_RANGE",
@@ -164,7 +168,7 @@ else:
         ]
     ]
     res.columns = [
-        "id",
+        # "id",
         "collection",
         "sex",
         "age_range",
@@ -174,8 +178,85 @@ else:
         "number_of_donors",
     ]
 
+    res['id'] = pd.Series()
+    existing_ids = []
+    existing_numbers = []
+    if args.facts:
+        old_facts = pd.read_excel(args.facts)
+        # concat with the pre-existent facts 
+        old_facts = old_facts[["id",
+            "collection",
+            "sex",
+            "age_range",
+            "sample_type",
+            "disease",
+            "number_of_samples",
+            "number_of_donors"]]
+        res_merged = pd.concat([old_facts, res])
+        res_merged =  res_merged.groupby(["collection",
+            "sex",
+            "age_range",
+            "sample_type",
+            "disease"]).agg({'id' :'first',
+                            'collection' : 'first',
+                            'sex': 'first',
+                            'age_range' : 'first',
+                            'sample_type' :'first',
+                            'disease' :'first',
+                            'number_of_samples': 'sum', 
+                            'number_of_donors': 'sum'})
+
+        id_prex = res_merged['id'].tolist()
+
+    
+
+        # extract id number
+        existing_ids = old_facts['id'].dropna().tolist()
+        existing_numbers = [int(x.split(':')[-1]) for x in existing_ids]
+
+
+    else:
+        res_merged = res.copy()
+
+    # # add FACTS id
+    # next_id_number = max(existing_numbers) + 1 if existing_numbers else 1
+    # for i, row in res_merged.iterrows():
+    #     if pd.isna(row['id']):  # se non esiste id
+    #         unique_id = next_id_number
+    #         new_id = f"bbmri-eric:factID:IT:collection:{collection_id}:id:{unique_id}"
+    #         res_merged.at[i, 'id'] = new_id
+    #         next_id_number += 1
+
+    # # move id to first
+    # cols = list(res_merged.columns)
+    # cols.insert(0, cols.pop(cols.index('id')))
+    # res_merged = res_merged[cols]
+
+    # Initialize the starting number for the new unique IDs
+    next_id_number = 1
+
+    def generate_unique_id():
+        global next_id_number
+        while True:
+            unique_id = f"{next_id_number}"
+            new_id = f"bbmri-eric:factID:IT:collection:{collection_id}:id:{unique_id}"
+            if new_id not in existing_ids:
+                return new_id
+            next_id_number += 1
+
+    # new IDs
+    for i, row in res_merged.iterrows():
+        if pd.isna(row.get('id')):  # se manca
+            new_id = generate_unique_id()
+            res_merged.at[i, 'id'] = new_id
+        existing_ids.append(new_id)  
+
+    # ID as first column
+    cols = list(res_merged.columns)
+    cols.insert(0, cols.pop(cols.index('id')))
+    res_merged = res_merged[cols]
 
     # save to file ----------------------------------------------------------------
-    output_file = f"outputs/bbmri-cohorts-collection-" + str(args.name) + ".xlsx"
-    res.to_excel(output_file, index = False)
-
+    output_file = f"outputs/" + str(out_name) + ".xlsx"
+    res_merged.to_excel(output_file, index = False, sheet_name="eu_bbmri_eric_IT_facts")
+    # res.to_excel(output_file, index = False, sheet_name="eu_bbmri_eric_IT_facts")
