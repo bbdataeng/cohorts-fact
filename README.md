@@ -20,17 +20,11 @@ You need to edit `config.yaml` and specify:
 - the names of columns and values in the input excel
 
 > Minimum 6 fields required:
-  
 >  * Sample ID
-
 >  * Patient ID
-  
 >  * Age
-  
 >  * Sex
-  
 >  * Material Type
-  
 >  * Diagnosis (ICD-10 code)
 
 ## Input
