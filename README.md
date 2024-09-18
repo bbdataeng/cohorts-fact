@@ -17,7 +17,21 @@ You need to edit `config.yaml` and specify:
 
 - collection ID
 
-- the names of columns and values in the input excel file
+- the names of columns and values in the input excel
+
+> Minimum 6 fields required:
+  
+  * Sample ID
+
+  * Patient ID
+  
+  * Age
+  
+  * Sex
+  
+  * Material Type
+  
+  * Diagnosis (ICD-10 code)
 
 ## Input
 
@@ -25,7 +39,7 @@ You need to edit `config.yaml` and specify:
 
 - `ex_facts` [optional]: xlsx file containing existing facts in the Directory
 
-- `out_name [optional]`: name of the output xlsx file. if None, default "facts.xlsx" is returned
+- `out_name` [optional]: name of the output xlsx file. if None, default "facts.xlsx" is returned
 
 ## Usage
 

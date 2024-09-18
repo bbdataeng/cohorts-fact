@@ -26,7 +26,7 @@ out_name = args.out_name
 if args.example:
     # Example facts table generation ----------------------------------------------
     age_ranges = ["Child", "Adolescent", "Adult", "Young Adult", "Middle-aged", "Aged (65-79 years)","Aged (>80 years)"]
-    disease = ["C18", "C34.9"]
+    disease = ["urn:miriam:icd:C18", "urn:miriam:icd:C34.9"]
     sex = ["MALE", "FEMALE"]
     material_type = ["TISSUE_FROZEN", "TISSUE_PARAFFIN_EMBEDDED", "BLOOD", "DNA"]
     df = pd.DataFrame()
@@ -38,7 +38,7 @@ if args.example:
     df["sample_type"] = np.random.choice(material_type, 3000)
     # print(df)
 
-    res = df.groupby(["sex", "disease", "age_range", "sample_type"], observed = True)[["patient_id", "sample_id"]].nunique().reset_index()
+    res = df.groupby(["sex", "age_range", "sample_type", "disease"], observed = True)[["patient_id", "sample_id"]].nunique().reset_index()
     res.rename(columns={"sample_id": "number_of_samples", "patient_id": "number_of_donors"})
 
     ids = []
@@ -127,6 +127,7 @@ else:
     data["AGE_RANGE"] = data["AGE_RANGE"].map(map_agerange)
     # data["SEX"] = data["SEX"].map(map_sex)
     # data["SAMPLE_ID"] = range(len(data))
+    data['DIAGNOSIS'] = 'urn:miriam:icd:' + data['DIAGNOSIS'].astype(str)
 
     # convert to proper datatype
     data["DIAGNOSIS"] = data["DIAGNOSIS"].astype("category")
@@ -255,6 +256,8 @@ else:
     cols = list(res_merged.columns)
     cols.insert(0, cols.pop(cols.index('id')))
     res_merged = res_merged[cols]
+
+
 
     # save to file ----------------------------------------------------------------
     output_file = f"outputs/" + str(out_name) + ".xlsx"
