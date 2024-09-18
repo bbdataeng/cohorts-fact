@@ -21,17 +21,17 @@ You need to edit `config.yaml` and specify:
 
 > Minimum 6 fields required:
   
-  * Sample ID
+>  * Sample ID
 
-  * Patient ID
+>  * Patient ID
   
-  * Age
+>  * Age
   
-  * Sex
+>  * Sex
   
-  * Material Type
+>  * Material Type
   
-  * Diagnosis (ICD-10 code)
+>  * Diagnosis (ICD-10 code)
 
 ## Input
 
