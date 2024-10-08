@@ -1,10 +1,11 @@
 # This configuration file defines the mapping of local data into BBMRI-cohorts categories
 
-# Specify biobank id and collection id: (taken from Directory)
+# Specify biobank id and collection id: (from Directory)
 biobank_id: bbmri-eric:ID:IT_1111111111
 collection_id: bbmri-eric:ID:IT_1111111111:collection:eee1112e21e2
+collection_alias: KDN
 
-# needed: sex/age/material_type/diagnosis
+# needed: sex/age/material_type/diagnosis(icd-10)
 
 # Define the names of each field
 field_mappings:
@@ -20,40 +21,34 @@ field_mappings:
   
 # Define the names of each value 
 value_mappings:
-  SEX:
+  SEX: # (https://directory-backend.molgenis.net/menu/codelists/dataexplorer?entity=eu_bbmri_eric_sex_types)
     MALE: M
     FEMALE: F
     UNDIFFERENTIAL: undifferentiated
     UNKNOWN: unknown
 
-  MATERIAL_TYPE:
-    TISSUE_PARAFFIN_EMBEDDED: FFPE
-    TISSUE_FROZEN:
-      - SNAP FROZEN
-      - FROZEN
-      - OCT
-    BLOOD: BLOOD
-    FAECES: FECIS
-    BUFFY_COAT: BUFFY COAT
-    RNA: RNA
-    DNA:
-    - DNA
-    - GDNA
-    SALIVA: SALIVA
-    URINE: URINE
-    CELL_LINE: CELLS
-    OTHER: SN
-    SERUM: SERUM
+  MATERIAL_TYPE: #(https://directory-backend.molgenis.net/menu/codelists/dataexplorer?entity=eu_bbmri_eric_material_types#)
+    BUFFY_COAT: Buffy Coat
+    CDNA: CDNA
+    CELL_LINES: Cells
+    DNA: DNA
+    FECES: Feces
+    MICRO_RNA: MicroRNA
+    NASAL_SWAB: Nasal Swab
+    NAV: NAV
+    OTHER: LIQUOR
+    PATHOGEN: Pathogen
+    PERIPHERAL_BLOOD_CELLS: Blood Cells
     PLASMA: PLASMA
-    LIQUOR: LIQUOR
-    WHOLE_BLOOD: WHOLE BLOOD
-    PATHOGEN:
-    THROAT_SWAB:
-    CDNA:
-    NASAL_SWAB:
-    TISSUE_STAINED:
-    PERIPHERAL_BLOOD_CELLS:
-    MICRO_RNA:
+    RNA: RNA
+    SALIVA: Saliva
+    SERUM: SERUM
+    THROAT_SWAB: Throat Swab
+    TISSUE_FROZEN: Tissue Frozen
+    TISSUE_PARAFFIN_EMBEDDED: Tissue FFPE
+    TISSUE_STAINED: Tissue Stained
+    URINE: Urine
+    WHOLE_BLOOD: Blood
 
 
 
