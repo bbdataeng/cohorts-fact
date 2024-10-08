@@ -35,13 +35,7 @@ You need to edit `config.yaml` and specify:
 
 - `ex_facts` [optional]: xlsx file containing existing facts in the [Directory](https://directory-backend.molgenis.net/menu/advancedsearch/dataexplorer?entity=eu_bbmri_eric_facts) 
 
-                        (must be downloaded with these options: 
-                        
-                        As column names I want: Attribute Names
-
-                        As entity values I want: Entity ids
-
-                        As download type I want: XLSX)
+  (must be downloaded with these options:  As column names I want: `Attribute Names` As entity values I want: `Entity ids` As download type I want: `XLSX`)
 
 
 - `out_name` [optional]: name of the output xlsx file. if None, default `facts.xlsx` is returned.
