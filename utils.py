@@ -3,9 +3,14 @@
 import numpy as np
 import pandas as pd
 
+
+global material_types
+global sex_types
+material_types = pd.read_excel("documents/BBMRI-Cohorts_Catagories.xlsx", sheet_name="eu_bbmri_eric_material_types")
+sex_types = pd.read_excel("documents/BBMRI-Cohorts_Catagories.xlsx", sheet_name="eu_bbmri_eric_sex_types")
+
 def apply_map(value, mapping):
     for miabis_value, biobank_values in mapping.items():
-
         if isinstance(biobank_values, str):
             biobank_values = [biobank_values]
         if value in biobank_values:
@@ -24,7 +29,7 @@ def generate_example():
         "Aged (65-79 years)",
         "Aged (>80 years)",
     ]
-    disease = ["urn:miriam:icd:C18", "urn:miriam:icd:C34.9"]
+    disease = ["urn:miriam:icd:C18.2", "urn:miriam:icd:C34.9"]
     sex = ["MALE", "FEMALE"]
     material_type = ["TISSUE_FROZEN", "TISSUE_PARAFFIN_EMBEDDED", "BLOOD", "DNA"]
     df = pd.DataFrame()
@@ -34,7 +39,6 @@ def generate_example():
     df["disease"] = np.random.choice(disease, 3000)
     df["age_range"] = np.random.choice(age_ranges, 3000)
     df["sample_type"] = np.random.choice(material_type, 3000)
-    # print(df)
 
     res = (
         df.groupby(["sex", "age_range", "sample_type", "disease"], observed=True)[
@@ -52,7 +56,7 @@ def generate_example():
         unique_id = f"FACT{i+1}"
         id = f"bbmri-eric:factID:IT:collection:00525194189:id:{unique_id}"
         ids.append(id)
-    res["collection_id"] = "CC12345"
+    res["collection_id"] = "bbmri-eric:factID:IT:collection:00525194189"
     res["id"] = ids
     cols = list(res)
     cols.insert(0, cols.pop(cols.index("id")))
@@ -74,17 +78,21 @@ def generate_example():
 
 
 
-def mapping(data, field_mappings, value_mappings):
-    # Field name mappings
-    for miabis_field, biobank_field in field_mappings.items():
-        if biobank_field in data.columns:
-            data[miabis_field] = data.pop(biobank_field)
+def mapping(data, field_mappings, value_mappings, miabis):
 
-    # Value mappings
-    for key, mapping in value_mappings.items():
-        if key in data.columns:
-            # print(data[key].apply(lambda x: apply_map(key, x, mapping)))
-            data[key] = data[key].apply(lambda x: apply_map(str(x), mapping))
+    if not miabis:
+        # Field name mappings
+        for miabis_field, biobank_field in field_mappings.items():
+            if biobank_field in data.columns:
+                data[miabis_field] = data.pop(biobank_field)
+
+        # Value mappings
+        for key, mapping in value_mappings.items():
+            if key in data.columns:
+                # print(data[key].apply(lambda x: apply_map(key, x, mapping)))
+                data[key] = data[key].apply(lambda x: apply_map(str(x), mapping))
+    else:
+        data = label_mapping(data)
 
     # replace local system’s terms for sex / disease / age_range / sample entries with the fixed term lists from the codebooks:
     bins = pd.IntervalIndex.from_tuples(
@@ -119,3 +127,18 @@ def mapping(data, field_mappings, value_mappings):
     data["SAMPLE_ID"] = data["SAMPLE_ID"].astype("category")
 
     return data
+
+
+def label_mapping(df):
+    '''mapping from MIABIS labels to directory IDs'''
+
+    material_d = dict(zip(material_types['label'], material_types['id']))
+    sex_d = dict(zip(sex_types['label'], sex_types['id']))
+    df['MATERIAL_TYPE'] = df['MATERIAL_TYPE'].map(material_d)
+    df['SEX'] = df['SEX'].map(sex_d)
+
+    return df
+
+def validation(data):
+    if not data['MATERIAL_TYPE'].isin(material_types['id']).all(): #and data['SEX'].isin(sex_types['id']):
+        raise ValueError("Values not matching BBMRI codelist.")
