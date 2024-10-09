@@ -2,7 +2,7 @@
 
 import numpy as np
 import pandas as pd
-
+from dateutil import relativedelta
 
 global material_types
 global sex_types
@@ -80,6 +80,12 @@ def generate_example():
 
 def mapping(data, field_mappings, value_mappings, miabis):
 
+    # if donor age is not present, compute it from birth date
+    try:
+        data['DONOR_AGE']
+    except:
+        data['DONOR_AGE'] = data.apply(lambda x: relativedelta.relativedelta(x['DIAGNOSIS_DATE'], x['BIRTH_DATE']).years, axis=1)
+        
     if not miabis:
         # Field name mappings
         for miabis_field, biobank_field in field_mappings.items():
@@ -94,6 +100,7 @@ def mapping(data, field_mappings, value_mappings, miabis):
     else:
         data = label_mapping(data)
 
+    print(data['MATERIAL_TYPE'])
     # replace local system’s terms for sex / disease / age_range / sample entries with the fixed term lists from the codebooks:
     bins = pd.IntervalIndex.from_tuples(
         [(2, 12), (13, 17), (18, 24), (25, 44), (45, 64), (65, 79), (80, 120)],
@@ -140,5 +147,6 @@ def label_mapping(df):
     return df
 
 def validation(data):
-    if not data['MATERIAL_TYPE'].isin(material_types['id']).all(): #and data['SEX'].isin(sex_types['id']):
+    # check if all the values are valid
+    if not data['MATERIAL_TYPE'].isin(material_types['id']).all() or not data['SEX'].isin(sex_types['id']).all():
         raise ValueError("Values not matching BBMRI codelist.")
