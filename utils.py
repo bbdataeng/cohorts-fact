@@ -18,6 +18,7 @@ def apply_map(value, mapping):
     return value
 
 
+
 def generate_example():
     
     age_ranges = [
@@ -100,7 +101,7 @@ def mapping(data, field_mappings, value_mappings, miabis):
     else:
         data = label_mapping(data)
 
-    print(data['MATERIAL_TYPE'])
+
     # replace local system’s terms for sex / disease / age_range / sample entries with the fixed term lists from the codebooks:
     bins = pd.IntervalIndex.from_tuples(
         [(2, 12), (13, 17), (18, 24), (25, 44), (45, 64), (65, 79), (80, 120)],
@@ -146,7 +147,11 @@ def label_mapping(df):
 
     return df
 
+
 def validation(data):
-    # check if all the values are valid
-    if not data['MATERIAL_TYPE'].isin(material_types['id']).all() or not data['SEX'].isin(sex_types['id']).all():
-        raise ValueError("Values not matching BBMRI codelist.")
+    # Ensure that all values for MATERIAL_TYPE and SEX are valid
+    if not data['MATERIAL_TYPE'].isin(material_types['id']).all():
+        raise ValueError("MATERIAL_TYPE values do not match the BBMRI codelist.")
+    if not data['SEX'].isin(sex_types['id']).all():
+        raise ValueError("SEX values do not match the BBMRI codelist.")
+    
