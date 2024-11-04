@@ -123,10 +123,11 @@ else:
         )
 
         id_prex = res_merged["id"].tolist()
-
+    
         # extract id number
         existing_ids = old_facts["id"].dropna().tolist()
-        existing_numbers = [int(x.split(":")[-1]) for x in existing_ids]
+
+        existing_numbers = [int(x.split(":")[-1].replace(alias, "")) for x in existing_ids]
 
     else:
         res_merged = res.copy()
@@ -141,20 +142,22 @@ else:
             if new_id not in existing_ids:
                 return new_id
             next_id_number += 1
+     
 
     # new IDs
     for i, row in res_merged.iterrows():
+
         if pd.isna(row.get("id")):  # se manca
             new_id = generate_unique_id()
             res_merged.at[i, "id"] = new_id
-        existing_ids.append(new_id)
+            existing_ids.append(new_id)
 
     # ID as first column
     cols = list(res_merged.columns)
     cols.insert(0, cols.pop(cols.index("id")))
     res_merged = res_merged[cols]
 
-    print(f"Generated {res_merged.shape[0]} combinations for {collection_id}.")
+    print(f"Generated {res_merged.shape[0]} combinations for {collection_id}, alias {alias}.")
 
     # save to file ----------------------------------------------------------------
     output_file = f"outputs/" + str(out_name) + ".xlsx"
