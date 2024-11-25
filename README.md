@@ -44,14 +44,15 @@ Minimum 6 fields required:
 
 ## Usage
 
-First, you have to edit `config.yaml` file.
-You have to specify Biobank ID and Collection ID.
+First, you have to edit `config.yaml` file. Please specify Biobank ID and Collection ID (you can find them in the [BBMRI Directory](https://directory.bbmri-eric.eu)).
+
 Then you can run the `facts.py` script.
 
 The toolkit offers two main options depending on whether your input data already conforms to the MIABIS standard:
 
 1. Input Data in MIABIS Standard
-If your input data already follows the MIABIS standard (see [minimal-dataset-template]("documents/minimal-dataset-template.xlsx")), you can use the `--miabis` flag for quicker conversion:
+
+If your input data already follows the MIABIS standard (see [minimal-dataset-template]("documents/minimal-dataset-template.xlsx")), you can use the `--miabis` flag:
 
 
 ``` shell
@@ -66,8 +67,8 @@ If your input data is not in the MIABIS standard, you’ll need to edit the `con
 facts.py --filename <FILENAME> 
 ``` 
  
-### Generate an example.
 
+---
 If you want to generate an example FACT table, run:
 ``` shell
 facts.py --example
