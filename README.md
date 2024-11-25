@@ -6,7 +6,7 @@ Python script for the creation of facts for the BBMRI COHORTS.
 
 ## Requirements
 ``` shell
-pip install pandas numpy
+pip install pandas numpy PyYAML python_dateutil
 ``` 
 
 ## Configuration
