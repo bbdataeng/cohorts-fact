@@ -40,9 +40,14 @@ Minimum 6 fields required:
 
   (must be downloaded with these options:  As column names I want: `Attribute Names` As entity values I want: `Entity ids` As download type I want: `XLSX`)
 
-- `out_name` [optional]: name of the output xlsx file. if None, default `facts.xlsx` is returned.
+- `out_name` [optional]: name of the output xlsx file. if None, default `facts-<COLLECTION ID>.xlsx` is returned.
 
 ## Usage
+
+Clone the repository:
+``` shell
+git clone https://github.com/bbdataeng/cohorts-fact.git
+``` 
 
 First, you have to edit `config.yaml` file. Please specify Biobank ID and Collection ID (you can find them in the [BBMRI Directory](https://directory.bbmri-eric.eu)).
 
