@@ -1,11 +1,15 @@
 # This configuration file defines the mapping of local data into BBMRI-cohorts categories
 
 # Specify biobank id and collection id: (from Directory)
-biobank_id: bbmri-eric:ID:IT_1111111
-collection_id: bbmri-eric:ID:IT_1111111:collection:1234
-collection_alias: KDN
+biobank_id: bbmri-eric:ID:IT_111111
+collection_id: bbmri-eric:ID:IT_111111:collection:1234
+collection_alias: COLLx # optional
 
 # needed: sex/age/material_type/diagnosis(icd-10)
+
+
+# if the input data is not compliant with the minimal dataset, please specify 
+# the mapping between MIABIS fields and values (keys) and your data (values).
 
 # Define the names of each field
 field_mappings:
@@ -13,13 +17,12 @@ field_mappings:
   PATIENT_ID: PATIENT_ID
   SAMPLE_ID: SAMPLE_ID
   SEX: SEX
-  DIAGNOSIS: DIAGNOSIS
-  MATERIAL_TYPE: MATERIAL_TYPE
+  DIAGNOSIS: ICD-10
+  MATERIAL_TYPE: SAMPLE_TYPE
   DONOR_AGE: DONOR_AGE
   DIAGNOSIS_DATE: DIAGNOSIS_DATE
 
-  
-  
+
 # Define the names of each value 
 value_mappings:
   SEX: # (https://directory-backend.molgenis.net/menu/codelists/dataexplorer?entity=eu_bbmri_eric_sex_types)
@@ -31,7 +34,7 @@ value_mappings:
   MATERIAL_TYPE: #(https://directory-backend.molgenis.net/menu/codelists/dataexplorer?entity=eu_bbmri_eric_material_types#)
     BUFFY_COAT: Buffy Coat
     CDNA: cDNA / mRNA
-    CELL_LINES: Cell lines
+    CELL_LINES: [Cell lines, Paraffin]
     DNA: DNA
     FECES: Feces
     MICRO_RNA: microRNA
@@ -45,7 +48,7 @@ value_mappings:
     SALIVA: Saliva
     SERUM: Serum
     THROAT_SWAB: Throat swab
-    TISSUE_FROZEN: Tissue (frozen)
+    TISSUE_FROZEN: [Tissue (frozen), frozen, snap]
     TISSUE_PARAFFIN_EMBEDDED: Tissue (paraffin preserved)
     TISSUE_STAINED: Tissue (stained sections/slides)
     URINE: Urine

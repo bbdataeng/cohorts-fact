@@ -12,7 +12,7 @@ parser.add_argument(
 )  # need to add pre-existing facts and sum
 parser.add_argument("--filename", help="name of the input file")
 parser.add_argument("--alias", help="alias for the subcollection")
-parser.add_argument("--out_name", help="name of the output file", default="facts")
+parser.add_argument("--out_name", help="name of the output file")
 parser.add_argument(
     "--example", help="generates an example facts table", action="store_true"
 )
@@ -22,7 +22,6 @@ parser.add_argument(
 args = parser.parse_args()
 
 filename = args.filename
-out_name = args.out_name
 miabis = args.miabis
 
 # Example facts table generation ----------------------------------------------
@@ -41,6 +40,10 @@ else:
     collection_id = config.get("collection_id")
     alias = config.get("collection_alias")
 
+    if args.out_name:
+        out_name = args.out_name
+    else:
+        out_name = collection_id.split(":")[-1]
     # Mapping ---------------------------------------------------------------------
 
     field_mappings = config.get("field_mappings", {})
@@ -160,5 +163,5 @@ else:
     print(f"Generated {res_merged.shape[0]} combinations for {collection_id}, alias {alias}.")
 
     # save to file ----------------------------------------------------------------
-    output_file = f"outputs/" + str(out_name) + ".xlsx"
+    output_file = f"outputs/facts-collection-" + str(out_name) + ".xlsx"
     res_merged.to_excel(output_file, index=False, sheet_name="eu_bbmri_eric_IT_facts")
