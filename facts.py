@@ -24,6 +24,9 @@ args = parser.parse_args()
 filename = args.filename
 miabis = args.miabis
 
+bio_list = pd.read_csv("documents/eu_bbmri_eric_biobanks_2024-11-25_10_05_03.csv")['Id'].tolist()
+coll_list = pd.read_csv("documents/eu_bbmri_eric_collections_2024-11-25_10_04_10.csv")['Id'].tolist()
+
 # Example facts table generation ----------------------------------------------
 if args.example:
     generate_example()
@@ -37,7 +40,11 @@ else:
         config = yaml.safe_load(file)
 
     biobank_id = config.get("biobank_id")
+    if biobank_id not in bio_list:
+        raise ValueError("Biobank ID not present into BBMRI Directory. Try Again.")
     collection_id = config.get("collection_id")
+    if collection_id not in coll_list:
+        raise ValueError("Collection ID not present into BBMRI Directory. Try Again.")
     alias = config.get("collection_alias")
 
     if args.out_name:

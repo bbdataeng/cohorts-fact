@@ -48,7 +48,9 @@ First, you have to edit `config.yaml` file.
 You have to specify Biobank ID and Collection ID.
 Then you can run the `facts.py` script.
 
-#### Minimal Dataset conformance (MIABIS)
+The toolkit offers two main options depending on whether your input data already conforms to the MIABIS standard:
+
+1. Input Data in MIABIS Standard
 If your input data already follows the MIABIS standard (see [minimal-dataset-template]("documents/minimal-dataset-template.xlsx")), you can use the `--miabis` flag for quicker conversion:
 
 
@@ -56,9 +58,9 @@ If your input data already follows the MIABIS standard (see [minimal-dataset-tem
 facts.py --filename <FILENAME> --miabis 
 ``` 
 
-#### No conformance with Minimal Dataset.
+2. Input Data Not in MIABIS Standard
 
-If your input data is not in the MIABIS standard, you’ll need to edit the mapping_config.yml file to map your local data fields into MIABIS CDM fields. After editing the mapping configuration, run the following command:
+If your input data is not in the MIABIS standard, you’ll need to edit the `config.yaml` file also to map your local data fields into MIABIS CDM fields. After editing the mapping configuration, run the following command:
 
 ``` shell
 facts.py --filename <FILENAME> 
