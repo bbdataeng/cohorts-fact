@@ -2,11 +2,11 @@
 
 Python script for the creation of facts for the BBMRI COHORTS.
 
-![facts-creation](https://github.com/bbdataeng/cohorts-fact/blob/main/BBMRIcohortguide.png)
+![facts-creation](https://github.com/bbdataeng/cohorts-fact/blob/main/img/BBMRIcohortguide.png)
 
 ## Requirements
 ``` shell
-pip install pandas numpy PyYAML python_dateutil
+pip install -r requirements.txt
 ``` 
 
 ## Configuration
@@ -82,3 +82,13 @@ facts.py --example
 ---
 
 The result is saved into the `output` directory.
+
+---
+
+# App
+
+For the GUI version of this tool, please run the following:
+
+``` shell
+run app.py
+```
