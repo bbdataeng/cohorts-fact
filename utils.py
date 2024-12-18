@@ -55,9 +55,9 @@ def generate_example():
     ids = []
     for i in range(len(res)):
         unique_id = f"FACT{i+1}"
-        id = f"bbmri-eric:factID:IT:collection:00525194189:id:{unique_id}"
+        id = f"bbmri-eric:factID:IT:collection:0000:id:{unique_id}"
         ids.append(id)
-    res["collection_id"] = "bbmri-eric:factID:IT:collection:00525194189"
+    res["collection_id"] = "bbmri-eric:factID:IT:collection:0000"
     res["id"] = ids
     cols = list(res)
     cols.insert(0, cols.pop(cols.index("id")))
@@ -79,19 +79,19 @@ def generate_example():
 
 
 
-def mapping(data, field_mappings, value_mappings, miabis):
+def mapping(data, field_mappings, value_mappings, miabis, orpha = False):
 
-    # if donor age is not present, compute it from birth date
-    try:
-        data['DONOR_AGE']
-    except:
-        data['DONOR_AGE'] = data.apply(lambda x: relativedelta.relativedelta(x['DIAGNOSIS_DATE'], x['BIRTH_DATE']).years, axis=1)
-        
+
     if not miabis:
         # Field name mappings
         for miabis_field, biobank_field in field_mappings.items():
             if biobank_field in data.columns:
                 data[miabis_field] = data.pop(biobank_field)
+        # if donor age is not present, compute it from birth date
+        try:
+            data['DONOR_AGE']
+        except:
+            data['DONOR_AGE'] = data.apply(lambda x: relativedelta.relativedelta(x['DIAGNOSIS_DATE'], x['BIRTH_DATE']).years, axis=1)
 
         # Value mappings
         for key, mapping in value_mappings.items():
@@ -99,6 +99,11 @@ def mapping(data, field_mappings, value_mappings, miabis):
                 # print(data[key].apply(lambda x: apply_map(key, x, mapping)))
                 data[key] = data[key].apply(lambda x: apply_map(str(x), mapping))
     else:
+        try:
+            data['DONOR_AGE']
+        except:
+            data['DONOR_AGE'] = data.apply(lambda x: relativedelta.relativedelta(x['DIAGNOSIS_DATE'], x['BIRTH_DATE']).years, axis=1)
+            
         data = label_mapping(data)
 
 
@@ -124,16 +129,19 @@ def mapping(data, field_mappings, value_mappings, miabis):
     data["AGE_RANGE"] = data["AGE_RANGE"].map(map_agerange)
     # data["SEX"] = data["SEX"].map(map_sex)
     # data["SAMPLE_ID"] = range(len(data))
-    data["DIAGNOSIS"] = "urn:miriam:icd:" + data["DIAGNOSIS"].astype(str)
+    if not orpha:
+        data["DIAGNOSIS"] = "urn:miriam:icd:" + data["DIAGNOSIS"].astype(str)
+
 
     # convert to proper datatype
+    
     data["DIAGNOSIS"] = data["DIAGNOSIS"].astype("category")
     data["SEX"] = data["SEX"].astype("category")
     data["MATERIAL_TYPE"] = data["MATERIAL_TYPE"].astype("category")
     data["AGE_RANGE"] = data["AGE_RANGE"].astype("category")
     data["PATIENT_ID"] = data["PATIENT_ID"].astype("category")
     data["SAMPLE_ID"] = data["SAMPLE_ID"].astype("category")
-
+    
     return data
 
 
@@ -149,6 +157,9 @@ def label_mapping(df):
 
 
 def validation(data):
+    
+    # data['MATERIAL_TYPE'] = data['MATERIAL_TYPE'].str.strip()
+
     # Ensure that all values for MATERIAL_TYPE and SEX are valid
     if not data['MATERIAL_TYPE'].isin(material_types['id']).all():
         raise ValueError("MATERIAL_TYPE values do not match the BBMRI codelist.")
