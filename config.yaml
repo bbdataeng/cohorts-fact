@@ -1,15 +1,15 @@
 # This configuration file defines the mapping of local data into BBMRI-cohorts categories
 
 # Specify biobank id and collection id: (from Directory)
-biobank_id: bbmri-eric:ID:IT_111111
-collection_id: bbmri-eric:ID:IT_111111:collection:1234
-collection_alias: COLLx # optional
+biobank_id: bbmri-eric:ID:IT_1504858990324590
+collection_id: bbmri-eric:ID:IT_1504858990324590:collection:d9e24ab3b4794b55bdcac978bd4bc5cc
+collection_alias: female-t
 
 # needed: sex/age/material_type/diagnosis(icd-10)
 
 
-# if the input data is not compliant with the minimal dataset, please specify 
-# the mapping between MIABIS fields and values (keys) and your data (values).
+# if the input data is NOT compliant with the minimal dataset, please specify 
+# the mapping between MIABIS fields and values (keys) and your data (values). 
 
 # Define the names of each field
 field_mappings:
@@ -18,41 +18,41 @@ field_mappings:
   SAMPLE_ID: SAMPLE_ID
   SEX: SEX
   DIAGNOSIS: ICD-10
-  MATERIAL_TYPE: SAMPLE_TYPE
+  MATERIAL_TYPE: SAMPLE_PRESERVATION_MODE
   DONOR_AGE: DONOR_AGE
-  DIAGNOSIS_DATE: DIAGNOSIS_DATE
+  DIAGNOSIS_DATE: SAMPLING_DATE
 
 
 # Define the names of each value 
 value_mappings:
   SEX: # (https://directory-backend.molgenis.net/menu/codelists/dataexplorer?entity=eu_bbmri_eric_sex_types)
-    MALE: Male
-    FEMALE: Female
+    MALE: M
+    FEMALE: F
     UNDIFFERENTIAL: Undifferentiated
     UNKNOWN: Unknown
 
   MATERIAL_TYPE: #(https://directory-backend.molgenis.net/menu/codelists/dataexplorer?entity=eu_bbmri_eric_material_types#)
     BUFFY_COAT: Buffy Coat
     CDNA: cDNA / mRNA
-    CELL_LINES: [Cell lines, Paraffin]
+    CELL_LINES: [Cell lines, CELL]
     DNA: DNA
     FECES: Feces
     MICRO_RNA: microRNA
     NASAL_SWAB: Nasal swab
     NAV: Not available
-    OTHER: Other
+    OTHER: [Other, LIQUOR]
     PATHOGEN: Pathogen
     PERIPHERAL_BLOOD_CELLS: Peripheral blood cells
-    PLASMA: Plasma
+    PLASMA: PLASMA
     RNA: RNA
     SALIVA: Saliva
-    SERUM: Serum
+    SERUM: SERUM
     THROAT_SWAB: Throat swab
-    TISSUE_FROZEN: [Tissue (frozen), frozen, snap]
-    TISSUE_PARAFFIN_EMBEDDED: Tissue (paraffin preserved)
+    TISSUE_FROZEN: [Tissue (frozen), SNAP, FROZEN, SNAP_FROZEN, FRESH_FROZEN, OCT]
+    TISSUE_PARAFFIN_EMBEDDED: [FFPE]
     TISSUE_STAINED: Tissue (stained sections/slides)
-    URINE: Urine
-    WHOLE_BLOOD: Whole Blood
+    URINE: URINE
+    WHOLE_BLOOD: BLOOD
 
 
 
