@@ -1,7 +1,7 @@
-customtkinter==5.2.2
-numpy==1.26.4
-pandas==1.4.4
+customtkinter
+numpy
+pandas
 Pillow
 python_dateutil
 PyYAML
-
+openpyxl
